@@ -1,0 +1,40 @@
+
+  <!-- HEADER FROM EJS -->
+<%- include(`header`) -%> 
+
+
+<body>
+  <!-- EJS TEMPLATE EXAMPLE -->
+
+  <h1 class="dateHeading"><%=currentDay%></h1>
+
+  <div class="box">
+    <h1 id="heading"><%=pageTitle%></h1>
+  </div>
+
+  <div class="box">
+    <form action="/delete" method="post">
+    <%for(let i=0;i<newItem.length;i++) {%>
+    <div class="item">
+      <!-- onChange calls a method to post a form on change of the input of checkbox, 
+      name checkBox is for checkbox to get from bodyparser
+      value assigns the items id to the checkbox, id is fetched from database id and we can use
+      this id to delete that item from database
+      -->
+      <input type="checkbox" onChange="this.form.submit()" name="checkBox" value="<%=newItem[i].id%>">
+       <input type="hidden" name="page" value="<%=pageTitle%>"></input> </input> 
+      <p><%=newItem[i].name%><p> 
+    </div>
+    <%}%>
+  </form>
+    <form class="item" action="/" method="post">
+      <input type="text" name="newList" placeholder="New Item" autocomplete="off"/>
+      <button type="submit" name="button" value=<%=pageTitle%> name="page" >+</button>
+    </form>
+  </div>
+  </body>
+
+  <!-- FOOTER FROM EJS -->
+
+
+  <%- include(`footer`) -%> 

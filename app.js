@@ -4,19 +4,8 @@ const date = require(__dirname + `/date.js`);
 const mongoose = require("mongoose");
 const app = express();
 
-//ROUTING IN EXPRESS
-
-// app.get("/:customInput", (req, res) => {
-//   const url = req.params.customInput;
-//   const listSchema = new mongoose.Schema({ name: String, items: [itemSchema] });
-// });
-
 // for Body Parser
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
-);
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //for using static CSS PAGE in public folder
 app.use(express.static(`public`));
@@ -25,13 +14,16 @@ app.use(express.static(`public`));
 app.set("view engine", "ejs");
 
 //creating and connect to DB todoDB in one line
-mongoose.connect("mongodb://localhost:27017/todoListDB");
+//mongoose.connect("mongodb://localhost:27017/todoListDB");
+mongoose.connect(
+  "mongodb+srv://prajwal124:testpassword@cluster0.lxzzk.mongodb.net/todoListDB"
+);
 
 //create todo list schema
 const todoListSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "Please Enter the ToDo Work Name!"], //validation where fruit name is must required.
+    required: [true, "Please Enter the List Name!"], //validation where List name is must required.
   },
   dateCreated: Date,
 });
@@ -55,13 +47,7 @@ function insertItemToDB(listName, dbCollectionName) {
       }
     }
   );
-  // mongoose.connection.close();
 }
-
-//DISPLAYING FROM THE DB
-//TWO ARRAYS TO FETCH THE DATA FROM DB AND STORE
-
-//console.log(date.getDate(), date.logHello());
 
 //Two Local Arrays to hold items one for home page, other for work page
 //Can push items to a const array in JS
@@ -79,7 +65,6 @@ app.post("/", (req, res) => {
     insertItemToDB(req.body.newList, todoListItem);
     res.redirect(`/`);
   }
-  //console.log(req.body);
 });
 
 //DELETE PAGE POST REQUEST WHEN CHECKBOX TICKED TO DELETE AN ITEM FROM DB AND LIST
@@ -128,7 +113,7 @@ app.post("/delete", (req, res) => {
     workListItem.findByIdAndRemove(checkedItemId, (err) => {
       if (err) console.log(err);
       else {
-        console.log(`Item Deleted`);
+        console.log(`Item Deleted : ${checkedItemName}`);
       }
       res.redirect(`/work`);
     });
@@ -148,11 +133,6 @@ app.get("/work", (req, res) => {
       });
     }
   });
-});
-
-//get request to display about page
-app.get("/about", (req, res) => {
-  res.render("about");
 });
 
 //get request to display home page
